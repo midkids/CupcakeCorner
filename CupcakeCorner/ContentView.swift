@@ -4,9 +4,12 @@
 //
 //  Created by Myron Snelson on 7/4/26.
 //
+// Sending and receiving Codable data with URLSession and SwiftUI
+// Loading an image from a remote server
 
 import SwiftUI
 
+/*
 struct Response: Codable {
     var results: [Result]
 }
@@ -61,10 +64,13 @@ struct ContentView: View {
             // actual data in the variable data
             // and the underscore says to discard
             // the metadata
+            // IMPORTANT: must use "try await"
+            //  in that order
             let (data, _) = try await URLSession.shared.data(from: url)
-            print(data)
             if let decodedResponse = try? JSONDecoder().decode(Response.self, from: data) {
                 results = decodedResponse.results
+            } else {
+                print("Could not decode data")
             }
         } catch {
             // If our data retrieval above fails for any
@@ -73,6 +79,53 @@ struct ContentView: View {
             print("Invalid data")
         }
     
+    }
+}
+*/
+
+struct ContentView: View {
+    var body: some View {
+        // SwiftUI does not know the size of the image
+        // being downloaded until run time
+        // Therefore, it is unable to size it appropriately
+        // and it does not know where it is 3X or 2X
+        // so SwiftUI cannot choose the appropriate image
+        // for the user's device
+        // To fix that, we must tell SwiftUI
+        // it is a 3X image that is being downloaded
+        // by adding a scale factor
+        // AsyncImage(url: URL(string: "https://hws.dev/img/logo.png"), scale: 3)
+        // Here will use a more advanced method of AysyncImage
+        // by adding a trailing closure
+        // Here the finished image is resizeable
+        // and the placeholder is resizeable
+        // they will take up the available space
+        /*
+        AsyncImage(url: URL(string: "https://hws.dev/img/logo.png")) { image in
+            image
+                .resizable()
+                .scaledToFit()
+        } placeholder: {
+            // Color.red
+            ProgressView()
+        }
+        // But the outer frame limits the size
+         .frame(width: 200, height: 200)
+        */
+        // Here is an even more advanced method AsyncImage
+        AsyncImage(url: URL(string: "https://hws.dev/img/logo.png")) { phase in
+            if let image = phase.image {
+                image
+                    .resizable()
+                    .scaledToFit()
+            } else if phase.error != nil {
+                Text("There was an error loading the image")
+            } else {
+                ProgressView()
+            }
+        }
+        // But the outer frame limits the size
+         .frame(width: 200, height: 200)
     }
 }
 
