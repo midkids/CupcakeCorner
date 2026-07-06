@@ -6,6 +6,7 @@
 //
 // Sending and receiving Codable data with URLSession and SwiftUI
 // Loading an image from a remote server
+// Validating and disabling forms
 
 import SwiftUI
 
@@ -83,6 +84,7 @@ struct ContentView: View {
 }
 */
 
+/*
 struct ContentView: View {
     var body: some View {
         // SwiftUI does not know the size of the image
@@ -95,7 +97,8 @@ struct ContentView: View {
         // it is a 3X image that is being downloaded
         // by adding a scale factor
         // AsyncImage(url: URL(string: "https://hws.dev/img/logo.png"), scale: 3)
-        // Here will use a more advanced method of AysyncImage
+        
+        // Here will use a more advanced method using AysyncImage
         // by adding a trailing closure
         // Here the finished image is resizeable
         // and the placeholder is resizeable
@@ -109,10 +112,11 @@ struct ContentView: View {
             // Color.red
             ProgressView()
         }
-        // But the outer frame limits the size
+        // But the outer frame limits the size of the image
          .frame(width: 200, height: 200)
         */
-        // Here is an even more advanced method AsyncImage
+        
+        // Here is an even more advanced method using AsyncImage
         AsyncImage(url: URL(string: "https://hws.dev/img/logo.png")) { phase in
             if let image = phase.image {
                 image
@@ -124,9 +128,41 @@ struct ContentView: View {
                 ProgressView()
             }
         }
-        // But the outer frame limits the size
+        // The outer frame limits the size of the image
          .frame(width: 200, height: 200)
     }
+}
+*/
+
+struct ContentView: View {
+    @State private var userName = ""
+    @State private var emailAddress = ""
+    
+    // In this example, we do not want the user
+    // to be able to tap the Create account button
+    // unless both the user name and the email
+    // address fields have been filled
+    
+    var disableForm: Bool {
+        userName.count < 5 || emailAddress.count < 5
+    }
+    var body: some View {
+       Form {
+           Section {
+                TextField("User Name", text: $userName)
+                TextField("Email Address", text: $emailAddress)
+            }
+           Section {
+               Button("Create account") {
+                   print("Creating account...")
+               }
+               // Disable button when the computed property
+               // disableForm is true
+               .disabled(disableForm)
+           }
+        }
+    }
+    
 }
 
 #Preview {
