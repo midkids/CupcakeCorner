@@ -7,6 +7,7 @@
 // Sending and receiving Codable data with URLSession and SwiftUI
 // Loading an image from a remote server
 // Validating and disabling forms
+// Adding Codable conformance to an @Observable class
 
 import SwiftUI
 
@@ -134,6 +135,7 @@ struct ContentView: View {
 }
 */
 
+/*
 struct ContentView: View {
     @State private var userName = ""
     @State private var emailAddress = ""
@@ -162,7 +164,55 @@ struct ContentView: View {
            }
         }
     }
-    
+}
+*/
+
+// Simple observable class
+// Observalbe quietly rewrites our class
+// so that it can be monitored by SwiftUI
+// In this case, that causes the rewrite to leak
+// which could cause all sorts of problems
+// To fix this, we are going to tell SwiftUI
+// exactly how to encode and decode the User class
+// This is done by nesting an enum inside the class
+// with an exact name of coding keys (plural)
+// It needs a raw value of strings plus a
+// conformance to the protocol coding key (singular)
+// Inside the enum, you make one case for
+// every property you want to save (may one,
+// maybe all of them)
+// You then use the raw value of the enum to say
+// what name that should have in your JSON
+@Observable
+class User: Codable {
+    enum CodingKeys: String, CodingKey {
+        // When you see the value _name
+        // - which is what observable makes
+        // the property name -
+        // change it to just name
+        // Causes the printed value of name to go
+        // from: {"_name":"Taylor","_$observationRegistrar":{}}
+        // to: {"name":"Taylor"}
+        // which is what we want to encode and decode
+        case _name = "name"
+    }
+    var name = "Taylor"
+}
+
+struct ContentView: View {
+    var body: some View {
+        // Button to encode the observable User class
+        Button("Encode Taylor", action: encodeTaylor)
+    }
+    func encodeTaylor() {
+        // We would NOT use ! in production, but
+        // it is okay for testing
+        // Function to encode User class
+        // then immediately decode and print it
+        let data = try! JSONEncoder().encode(User())
+        let str = String(decoding: data, as: UTF8.self)
+        print(str)
+    }
 }
 
 #Preview {
