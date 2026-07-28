@@ -10,6 +10,7 @@
 // Adding Codable conformance to an @Observable class
 // Adding haptic effects
 // Taking basic order details
+// Preparing for checkout
 
 import CoreHaptics
 
@@ -315,7 +316,7 @@ struct ContentView: View {
 */
 
 
-// The acutaion CupcakeCorner project
+// The actual CupcakeCorner project
 // We will use a single class to store all our data
 // and we will pass it from screen to screen
 // in our project
@@ -352,6 +353,12 @@ struct ContentView: View {
                 }
                 Section {
                     NavigationLink("Delivery details") {
+                        // IMPORTANT: Here we are passing
+                        // the address of an instance of
+                        // the order class
+                        // This allows the AddressView
+                        // to access the same order data as
+                        // we have here in the ContentView
                         AddressView(order: order)
                     }
                 }
