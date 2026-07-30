@@ -126,8 +126,12 @@ struct CheckoutView: View {
         
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        // Added by AI because the reqres server
+        // now requires an API key
         request.setValue(reqresAPIKey, forHTTPHeaderField: "x-api-key")
         request.setValue("prod", forHTTPHeaderField: "X-Reqres-Env")
+        
         // We are writing data
         request.httpMethod = "POST"
         
@@ -135,6 +139,9 @@ struct CheckoutView: View {
         do {
             let (data, response) = try await URLSession.shared.upload(for: request, from: encoded)
             
+            // Added by AI because the reqres server
+            // now requires an API key
+            // This code checks server response for errors
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
                 let serverMessage = try? JSONDecoder().decode(ReqResErrorResponse.self, from: data)
