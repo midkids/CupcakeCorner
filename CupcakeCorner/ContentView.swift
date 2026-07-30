@@ -11,6 +11,7 @@
 // Adding haptic effects
 // Taking basic order details
 // Preparing for checkout
+// Sending and receiving orders over the internet
 
 import CoreHaptics
 
