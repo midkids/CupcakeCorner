@@ -124,6 +124,7 @@ struct CheckoutView: View {
             return
         }
         
+        // Create URL request
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
