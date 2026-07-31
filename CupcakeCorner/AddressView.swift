@@ -41,6 +41,10 @@ struct AddressView: View {
                 TextField("Street Address", text: $order.streetAddress)
                 TextField("City", text: $order.city)
                 TextField("Zip", text: $order.zip)
+                Text("All fields are required")
+                    .foregroundColor(.red)
+                    .font(.footnote)
+                    .frame(maxWidth: .infinity, alignment: .center)
             }
             
             Section {

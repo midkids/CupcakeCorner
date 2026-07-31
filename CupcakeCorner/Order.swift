@@ -50,7 +50,8 @@ class Order: Codable {
     var city = ""
     var zip = ""
     
-    // Validate the order has no empty or all spaces     fields
+    // Validate the order has no empty or all spaces fields
+    // Per Challenge #1
     var hasValidAddress: Bool {
         if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
             streetAddress.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
