@@ -14,6 +14,7 @@ private struct ReqResErrorResponse: Decodable {
 
 struct CheckoutView: View {
     var order: Order
+    @Binding var path: NavigationPath
   
     // Added by AI because the reqres server
     // now requires an API key
@@ -21,6 +22,7 @@ struct CheckoutView: View {
     
     @State private var confirmationMessage = ""
     @State private var showingConfirmation = false
+    @State private var orderWasSuccessful = false
     
     var body: some View {
         // Using ScrollView here makes sure out layout
@@ -67,13 +69,18 @@ struct CheckoutView: View {
         .scrollBounceBehavior(.basedOnSize)
         // alert when showingConfirmation is true
         .alert("Thank you", isPresented: $showingConfirmation) {
-            Button("OK") { }
+            Button("OK") {
+                if orderWasSuccessful {
+                    path = NavigationPath()
+                }
+            }
         } message: {
             Text(confirmationMessage)
         }
     }
     
     func placeOrder() async {
+        orderWasSuccessful = false
         // Required the Order class to conform to the
         // protocol Codable
         guard let encoded = try? JSONEncoder().encode(order) else {
@@ -153,6 +160,7 @@ struct CheckoutView: View {
             
             let decodedOrder = try JSONDecoder().decode(Order.self, from: data)
             confirmationMessage = "Your order for \(decodedOrder.quantity)x \(Order.types[decodedOrder.type].lowercased()) cupcakes is on the way!"
+            orderWasSuccessful = true
             showingConfirmation = true
         } catch {
             confirmationMessage = "Checkout failed: \(error.localizedDescription)"
@@ -172,6 +180,6 @@ struct CheckoutView: View {
 #Preview {
     // Create an empty order for preview purposes
     NavigationStack {
-        CheckoutView(order: Order())
+        CheckoutView(order: Order(), path: .constant(NavigationPath()))
     }
 }

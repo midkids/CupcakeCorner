@@ -323,12 +323,22 @@ struct ContentView: View {
 // in our project
 // This means all the screens in our app will
 // share the same data
+
+// Added by AI to cause the UI to return
+// to the ContentView screen when an order
+// successfully completes
+enum AppRoute: Hashable {
+    case address
+    case checkout
+}
+
 struct ContentView: View {
     // This is the only place an order will be created
     @State private var order = Order()
+    @State private var path = NavigationPath()
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             Form {
                 Section {
                     Picker("Select your cake type", selection: $order.type) {
@@ -353,18 +363,28 @@ struct ContentView: View {
                     
                 }
                 Section {
-                    NavigationLink("Delivery details") {
-                        // IMPORTANT: Here we are passing
-                        // the address of an instance of
-                        // the order class
-                        // This allows the AddressView
-                        // to access the same order data as
-                        // we have here in the ContentView
-                        AddressView(order: order)
-                    }
+                    NavigationLink("Delivery details", value: AppRoute.address)
                 }
             }
             .navigationTitle("Cupcake Corner")
+            
+            // Added by AI to cause the UI to return
+            // to the ContentView screen when an order
+            // successfully completes
+            .navigationDestination(for: AppRoute.self) { route in
+                switch route {
+                // IMPORTANT: Here we are passing
+                // the address of an instance of
+                // the order class
+                // This allows the AddressView
+                // to access the same order data as
+                // we have here in the ContentView
+                case .address:
+                    AddressView(order: order, path: $path)
+                case .checkout:
+                    CheckoutView(order: order, path: $path)
+                }
+            }
         }
     }
 }

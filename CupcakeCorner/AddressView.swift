@@ -31,6 +31,10 @@ struct AddressView: View {
     // You WILL use @Bindable a lot in your projects!
     @Bindable var order: Order
     
+    // Added by AI to cause the UI to return
+    // to the ContentView screen when an order
+    // successfully completes
+    @Binding var path: NavigationPath
     
     var body: some View {
         Form {
@@ -48,17 +52,15 @@ struct AddressView: View {
             }
             
             Section {
-                NavigationLink("Check Out") {
-                    // Pass our order object to
-                    // CheckoutView
-                    // The ContentView makes the order,
-                    // passes the order to the AddressView,
-                    // which in turn passes the order to the
-                    // CheckoutView
-                    // IMPORTANT: All three view point to the
-                    // same data object
-                    CheckoutView(order: order)
-                }
+                // The ContentView makes the order,
+                // passes the order to the AddressView,
+                // which in turn passes the order to the
+                // CheckoutView
+                // IMPORTANT: All three view point to the
+                // same data object
+                
+                
+                NavigationLink("Check Out", value: AppRoute.checkout)
             }
             // The address fields are validated in the
             // order class Order.swift
@@ -79,6 +81,6 @@ struct AddressView: View {
     // in order to see the NavigationTitle for the
     // AddressView - It works!
         NavigationStack {
-            AddressView(order: Order())
+            AddressView(order: Order(), path: .constant(NavigationPath()))
     }
 }
