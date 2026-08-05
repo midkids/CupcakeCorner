@@ -49,7 +49,7 @@ struct CheckoutView: View {
                 Text("Your total cost is: \(order.cost, format: .currency(code: "USD"))")
                     .font(.title)
                 
-                // Normally a button want to perform
+                // Normally a button wants to perform
                 // an action immediately
                 Button("Place order") {
                     // Using this code  - an await
@@ -131,6 +131,8 @@ struct CheckoutView: View {
             return
         }
         
+        // NOTE: The reqres.in server is very useful
+        // for testing purposes
         // Create URL request
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -143,7 +145,13 @@ struct CheckoutView: View {
         // We are writing data
         request.httpMethod = "POST"
         
+        // Here, we post the order to the
+        // reqres.in server and the reqres.in server
+        // sends the order back to us
         // Now we are all set to make our network call
+        // IMPORTANT: the server, reqres.in sends back
+        // the order data we posted here in the consant
+        // data
         do {
             let (data, response) = try await URLSession.shared.upload(for: request, from: encoded)
             

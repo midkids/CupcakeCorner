@@ -70,7 +70,7 @@ struct ContentView: View {
     
     // Use of the keyword async tells Swift
     // this function might want to go to sleep
-    // so it can carry on waiting
+    // so the app can carry on while waiting
     // for some other work to complete
     // In this case, this means going to sleep
     // while our networking code happens
@@ -199,7 +199,8 @@ struct ContentView: View {
 // attached to unresponsive to user input
 // Buttons cannot be pressed, sliders do not slide, etc.
 // You can use disabled with simple properties,
-// but can also use computed properties or call a method
+// but can also use computed properties or
+// a method call
 struct ContentView: View {
     @State private var userName = ""
     @State private var emailAddress = ""
